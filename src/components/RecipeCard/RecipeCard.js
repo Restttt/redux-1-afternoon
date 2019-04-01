@@ -8,7 +8,9 @@ let RecipeCard = props => {
     authorFirst,
     authorLast,
     ingredients,
-    instructions
+    instructions,
+    index,
+    deleteCardFn
   } = props;
   const ingredientsDisplay = ingredients.map((ingredient, i) => {
     return <li key={i}>{ingredient}</li>;
@@ -34,6 +36,7 @@ let RecipeCard = props => {
         <ol className="list">{instructionsDisplay}</ol>
       </div>
       <svg
+        onClick={() => deleteCardFn(index)}
         className="delete"
         width="60"
         height="60"

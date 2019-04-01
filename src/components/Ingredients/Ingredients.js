@@ -1,25 +1,44 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import store, { UPDATE_INGREDIENTS } from "../../store";
 
 class Ingredients extends Component {
   constructor(props) {
     super(props);
+
+    const info = store.getState();
+
     this.state = {
-      ingredients: [],
-      input: ""
+      ingredients: info.ingredients,
+      input: ''
     };
-  }
+  };
+
   handleChange(val) {
     this.setState({
       input: val
     });
-  }
+  };
+
   addIngredient() {
-    // Send data to Redux state
+    store.dispatch({
+      type: UPDATE_INGREDIENTS,
+      payload: this.state.input
+    });
     this.setState({
       input: ""
     });
-  }
+  };
+
+  componentDidMount() {
+    store.subscribe(() => {
+      const info = store.getState();
+      this.setState({ 
+        ingredients: info.ingredients
+      }); 
+    });
+  };
+
   render() {
     const ingredients = this.state.ingredients.map((ingredient, i) => {
       return <li key={i}>{ingredient}</li>;
@@ -50,7 +69,7 @@ class Ingredients extends Component {
         </Link>
       </div>
     );
-  }
-}
+  };
+};
 
 export default Ingredients;

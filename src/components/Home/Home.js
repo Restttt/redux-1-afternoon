@@ -1,16 +1,36 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import RecipeCard from "./../RecipeCard/RecipeCard";
+import store, { DELETE_CARD } from "../../store";
 import "./Home.css";
 
 class Home extends Component {
   constructor(props) {
     super(props);
+
+    const info = store.getState();
+
     this.state = {
-      recipes: []
+      recipes: info.recipes
     };
   }
 
+  deleteCard = (index) => {
+    store.dispatch({
+      type: DELETE_CARD,
+      payload: index
+    });
+  };
+
+  componentDidMount() {
+    store.subscribe(() => {
+      const info = store.getState();
+      this.setState({
+        recipes: info.recipes
+      });
+    });
+  };
+  
   render() {
     const recipes = this.state.recipes.map((recipe, i) => {
       return (
@@ -22,6 +42,8 @@ class Home extends Component {
           authorLast={recipe.authorLast}
           ingredients={recipe.ingredients}
           instructions={recipe.instructions}
+          index={i}
+          deleteCardFn={this.deleteCard}
         />
       );
     });
